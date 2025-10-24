@@ -28,23 +28,23 @@ jobs:
             const fs = require('fs');
             const path = require('path');
             
-            const sourceFileName = '明文源吗';
-            const outputFileName = '少年你相信光吗';
+            const sourceFileName = '明文源嗎';
+            const outputFileName = '少年你相信光嗎';
             const sourceFilePath = path.join(process.cwd(), sourceFileName);
 
             if (!fs.existsSync(sourceFilePath)) {
-              console.error('错误：在路径 \'' + sourceFilePath + '\' 未找到源文件。请确保您的仓库根目录有名为 \'明文源吗\' 的文件。');
+              console.error('錯誤：在路徑 \'' + sourceFilePath + '\' 未找到原始檔。請確保您的倉庫根目錄有名為 \'明文源嗎\' 的檔案。');
               process.exit(1);
             }
 
             const originalCode = fs.readFileSync(sourceFilePath, 'utf8');
 
             if (!originalCode || originalCode.trim().length === 0) {
-              console.error('错误：源文件 ' + sourceFileName + ' 为空。');
+              console.error('錯誤：原始檔 ' + sourceFileName + ' 為空。');
               process.exit(1);
             }
 
-            // --- 最终平衡型混淆配置 ---
+            // --- 最終平衡型混淆配置 ---
             const obfuscationOptions = {
                 compact: true,
                 controlFlowFlattening: true,
@@ -67,14 +67,14 @@ jobs:
             const obfuscatedCode = JavaScriptObfuscator.obfuscate(originalCode, obfuscationOptions).getObfuscatedCode();
             
             fs.writeFileSync(path.join(process.cwd(), outputFileName), obfuscatedCode, 'utf8');
-            console.log('成功将 \'' + sourceFileName + '\' 混淆并保存至 \'' + outputFileName + '\'。');
+            console.log('成功將 \'' + sourceFileName + '\' 混淆並儲存至 \'' + outputFileName + '\'。');
           "
 
       - name: Commit and push the obfuscated file
         run: |
           git config --global user.name 'GitHub Actions Bot'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add '少年你相信光吗'
+          git add '少年你相信光嗎'
           if git diff --staged --quiet; then
             echo "No changes to commit, the obfuscated file is already up-to-date."
           else

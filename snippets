@@ -1,6 +1,6 @@
 import { connect } from 'cloudflare:sockets';
 
-// --- 硬编码配置 ---
+// --- 硬編碼配置 ---
 const authToken = 'f64bdc57-0f54-4705-bf75-cfd646d98c06';
 const fallbackAddress = 'ProxyIP.cmliussss.net';
 const fallbackPort = '443';
@@ -53,21 +53,21 @@ export default {
 				return await handleWsRequest(request);
 			} else if (request.method === 'GET') {
 				if (url.pathname === '/') {
-					const successHtml = `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>部署成功</title><style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;background-color:#121212;color:#e0e0e0;text-align:center;}.container{padding:2rem;border-radius:8px;background-color:#1e1e1e;box-shadow:0 4px 6px rgba(0,0,0,0.1);}h1{color:#4caf50;}</style></head><body><div class="container"><h1>✅ 部署成功</h1><p>请继续后面的操作。</p></div></body></html>`;
+					const successHtml = `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>部署成功</title><style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;background-color:#121212;color:#e0e0e0;text-align:center;}.container{padding:2rem;border-radius:8px;background-color:#1e1e1e;box-shadow:0 4px 6px rgba(0,0,0,0.1);}h1{color:#4caf50;}</style></head><body><div class="container"><h1>✅ 部署成功</h1><p>請繼續後面的操作。</p></div></body></html>`;
 					return new Response(successHtml, { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
 				}
-				// 支持UUID路径：/uuid - 显示图形化界面
+				// 支援UUID路徑：/uuid - 顯示圖形化介面
 				if (url.pathname.length > 1 && url.pathname !== '/' && !url.pathname.includes('/sub')) {
-					const uuid = url.pathname.replace(/\/$/, '').substring(1); // 移除末尾斜杠
+					const uuid = url.pathname.replace(/\/$/, '').substring(1); // 移除末尾斜槓
 					if (isValidFormat(uuid)) {
 						if (uuid === authToken) {
 							return await handleSubscriptionPage(request, uuid);
 						} else {
-							return new Response('UUID错误', { status: 403 });
+							return new Response('UUID錯誤', { status: 403 });
 						}
 					}
 				}
-				// 支持UUID/sub路径：/uuid/sub - 返回订阅
+				// 支援UUID/sub路徑：/uuid/sub - 返回訂閱
 				if (url.pathname.includes('/sub')) {
 					const pathParts = url.pathname.split('/');
 					if (pathParts.length === 2 && pathParts[1] === 'sub') {
@@ -76,12 +76,12 @@ export default {
 							if (uuid === authToken) {
 								return await handleSubscriptionRequest(request, uuid, url);
 							} else {
-								return new Response('UUID错误', { status: 403 });
+								return new Response('UUID錯誤', { status: 403 });
 							}
 						}
 					}
 				}
-				// 保持向后兼容
+				// 保持向後相容
 				if (url.pathname.toLowerCase().includes(`/${authToken}`)) {
 					return await handleSubscriptionRequest(request, authToken);
 				}
@@ -101,7 +101,7 @@ async function handleSubscriptionPage(request, uuid = null) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>订阅中心</title>
+    <title>訂閱中心</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -213,14 +213,14 @@ async function handleSubscriptionPage(request, uuid = null) {
 <body>
     <div class="matrix-bg"></div>
     <div class="matrix-rain"></div>
-    <div class="matrix-text">代理订阅中心 v0.1</div>
+    <div class="matrix-text">代理訂閱中心 v0.1</div>
     <div class="container">
         <div class="header">
-            <h1 class="title">代理订阅中心</h1>
-            <p class="subtitle">多客户端支持 • 智能优选 • 一键生成</p>
+            <h1 class="title">代理訂閱中心</h1>
+            <p class="subtitle">多客戶端支援 • 智慧優選 • 一鍵生成</p>
         </div>
         <div class="card">
-            <h2 class="card-title">[ 选择客户端 ]</h2>
+            <h2 class="card-title">[ 選擇客戶端 ]</h2>
             <div class="client-grid">
                 <button class="client-btn" onclick="generateClientLink('clash')">CLASH</button>
                 <button class="client-btn" onclick="generateClientLink('surge')">SURGE</button>
@@ -231,14 +231,14 @@ async function handleSubscriptionPage(request, uuid = null) {
             <div class="subscription-url" id="clientSubscriptionUrl"></div>
         </div>
         <div class="card">
-            <h2 class="card-title">[ 快速获取 ]</h2>
-            <button class="generate-btn" onclick="getBase64Subscription()">获取订阅链接</button>
+            <h2 class="card-title">[ 快速獲取 ]</h2>
+            <button class="generate-btn" onclick="getBase64Subscription()">獲取訂閱連結</button>
             <div class="subscription-url" id="base64SubscriptionUrl"></div>
         </div>
         <div class="card">
-            <h2 class="card-title">[ 相关链接 ]</h2>
+            <h2 class="card-title">[ 相關連結 ]</h2>
             <div style="text-align: center; margin: 20px 0;">
-                <a href="https://github.com/byJoey/cfnew" target="_blank" style="color: #00ff00; text-decoration: none; margin: 0 20px; font-size: 1.2rem; text-shadow: 0 0 5px #00ff00;">GitHub 项目</a>
+                <a href="https://github.com/byJoey/cfnew" target="_blank" style="color: #00ff00; text-decoration: none; margin: 0 20px; font-size: 1.2rem; text-shadow: 0 0 5px #00ff00;">GitHub 專案</a>
                 <a href="https://www.youtube.com/@joeyblog" target="_blank" style="color: #00ff00; text-decoration: none; margin: 0 20px; font-size: 1.2rem; text-shadow: 0 0 5px #00ff00;">YouTube @joeyblog</a>
             </div>
         </div>
@@ -248,15 +248,15 @@ async function handleSubscriptionPage(request, uuid = null) {
             var currentUrl = window.location.href;
             var subscriptionUrl = currentUrl + "/sub";
             
-            // V2RAY 不需要转换，直接返回原始订阅
+            // V2RAY 不需要轉換，直接返回原始訂閱
             if (clientType === 'v2ray') {
                 document.getElementById("clientSubscriptionUrl").textContent = subscriptionUrl;
                 document.getElementById("clientSubscriptionUrl").style.display = "block";
                 navigator.clipboard.writeText(subscriptionUrl).then(function() {
-                    alert("V2Ray 订阅链接已复制");
+                    alert("V2Ray 訂閱連結已複製");
                 });
             } else {
-                // 其他客户端需要通过API转换
+                // 其他客戶端需要透過API轉換
                 var encodedUrl = encodeURIComponent(subscriptionUrl);
                 var apiUrl = "https://s.jhb.edu.kg/sub?target=" + clientType + "&url=" + encodedUrl + "&insert=false";
                 document.getElementById("clientSubscriptionUrl").textContent = apiUrl;
@@ -265,7 +265,7 @@ async function handleSubscriptionPage(request, uuid = null) {
                     var displayName = clientType.toUpperCase();
                     if (clientType === 'surge') displayName = 'SURGE';
                     if (clientType === 'singbox') displayName = 'SING-BOX';
-                    alert(displayName + " 订阅链接已复制");
+                    alert(displayName + " 訂閱連結已複製");
                 });
             }
         }
@@ -273,7 +273,7 @@ async function handleSubscriptionPage(request, uuid = null) {
             var currentUrl = window.location.href;
             var subscriptionUrl = currentUrl + "/sub";
             
-            // 直接获取Base64订阅内容
+            // 直接獲取Base64訂閱內容
             fetch(subscriptionUrl)
                 .then(function(response) {
                     return response.text();
@@ -282,12 +282,12 @@ async function handleSubscriptionPage(request, uuid = null) {
                     document.getElementById("base64SubscriptionUrl").textContent = base64Content;
                     document.getElementById("base64SubscriptionUrl").style.display = "block";
                     navigator.clipboard.writeText(base64Content).then(function() {
-                        alert("Base64订阅内容已复制");
+                        alert("Base64訂閱內容已複製");
                     });
                 })
                 .catch(function(error) {
-                    console.error("获取订阅失败:", error);
-                    alert("获取订阅失败，请重试");
+                    console.error("獲取訂閱失敗:", error);
+                    alert("獲取訂閱失敗，請重試");
                 });
         }
     </script>
@@ -324,7 +324,7 @@ async function handleSubscriptionRequest(request, uuid, url = null) {
     }
 
     if (finalLinks.length === 0) {
-        const errorRemark = "所有节点获取失败";
+        const errorRemark = "所有節點獲取失敗";
         const errorLink = `vless://00000000-0000-0000-0000-000000000000@127.0.0.1:80?encryption=none&security=none&type=ws&host=error.com&path=%2F#${encodeURIComponent(errorRemark)}`;
         finalLinks.push(errorLink);
     }
@@ -484,7 +484,7 @@ function generateLinksFromNewIPs(list, uuid, workerDomain) {
     return links;
 }
 
-// 简化的客户端格式生成函数
+// 簡化的客戶端格式生成函式
 async function generateClashConfig(links) {
     const config = {
         port: 7890,
@@ -550,13 +550,13 @@ dns-server = 8.8.8.8, 1.1.1.1
     }
 
     config += `\n\n[Proxy Group]
-节点选择 = select, auto
+節點選擇 = select, auto
 auto = url-test, `;
 
     const nodeNames = [];
     for (const link of links) {
         if (link.startsWith('vless://')) {
-            const name = decodeURIComponent(link.split('#')[1] || '节点');
+            const name = decodeURIComponent(link.split('#')[1] || '節點');
             nodeNames.push(name);
         }
     }
@@ -567,7 +567,7 @@ interval = 300
 
 [Rule]
 GEOIP,CN,DIRECT
-FINAL,节点选择`;
+FINAL,節點選擇`;
 
     return config;
 }
@@ -592,18 +592,18 @@ server_remote = `;
         }
     }
     config += `\n\n[policy]
-static = 节点选择, `;
+static = 節點選擇, `;
     
     const nodeNames = [];
     for (const link of links) {
         if (link.startsWith('vless://')) {
-            const name = decodeURIComponent(link.split('#')[1] || '节点');
+            const name = decodeURIComponent(link.split('#')[1] || '節點');
             nodeNames.push(name);
         }
     }
     config += nodeNames.join(', ');
     config += `\n\n[filter]
-FINAL, 节点选择`;
+FINAL, 節點選擇`;
     
     return config;
 }
@@ -644,7 +644,7 @@ dns-server = 8.8.8.8, 1.1.1.1
     return config;
 }
 
-// WebSocket处理函数（简化版）
+// WebSocket處理函式（簡化版）
 async function handleWsRequest(request) {
     const wsPair = new WebSocketPair();
     const [clientSock, serverSock] = Object.values(wsPair);
